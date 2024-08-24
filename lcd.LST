@@ -1,0 +1,71 @@
+C51 COMPILER V9.60.0.0   LCD                                                               08/01/2023 10:36:05 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LCD
+OBJECT MODULE PLACED IN E:\RFID project\lcd.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE lcd.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2) OBJECT(E:\RFID
+                    - project\lcd.obj)
+
+line level    source
+
+   1          #include<reg52.h>
+   2          #include"delay.h"
+   3          
+   4          #define lcd_data P0
+   5          
+   6          sbit rs=P3^4;
+   7          sbit rw=P3^5;
+   8          sbit en=P3^6;
+   9          
+  10          void write_lcd(unsigned char dat)
+  11          {
+  12   1        lcd_data=dat;
+  13   1        rw=0; 
+  14   1        en=1;
+  15   1        en=0;
+  16   1        delay_ms(2);
+  17   1      }
+  18          void cmd_lcd(unsigned char cmd)
+  19          {
+  20   1        rs=0; //sel cmd reg
+  21   1        write_lcd(cmd);
+  22   1      
+  23   1      }
+  24          
+  25          void putc_lcd(unsigned char val)
+  26          {
+  27   1         rs=1;  // sel data register
+  28   1         write_lcd(val);
+  29   1      
+  30   1      }
+  31          void init_lcd()
+  32          {
+  33   1        cmd_lcd(0x02);//return home
+  34   1        cmd_lcd(0x38);//8_bit mode
+  35   1        cmd_lcd(0x06);//increment cursor to right
+  36   1        cmd_lcd(0x0c);//display on cursor off
+  37   1        cmd_lcd(0x01);//clear screen
+  38   1        cmd_lcd(0x80);//first line first position
+  39   1      
+  40   1      }
+  41          void str_lcd(unsigned char *p)
+  42          {
+  43   1        while(*p)
+  44   1            putc_lcd(*p++);
+  45   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     92    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.0.0   LCD                                                               08/01/2023 10:36:05 PAGE 2   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
